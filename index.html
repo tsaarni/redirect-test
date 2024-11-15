@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirect test</title>
+</head>
+<body>
+    <button id="getRequestButton">GET</button>
+    <button id="postRequestButton">POST</button>
+    <button id="putRequestButton">PUT</button>
+    <button id="deleteRequestButton">DELETE</button>
+    <div id="log"></div>
+    <script>
+        async function makeRequest(method) {
+            try {
+                logMessage('Making ' + method + ' request to /one');
+                const response = await fetch('/one', {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: method !== 'GET' ? JSON.stringify({
+                        path: '/one',
+                        method: method }) : null
+                });
+                logMessage("Got response status: " + response.status);
+                logMessage("Response body:");
+                logMessage(await response.text());
+                logMessage('---');
+            } catch (error) {
+                logMessage(error);
+            }
+        }
+
+        function logMessage(message) {
+            document.getElementById('log').innerText += message + '\n';
+        }
+
+        document.getElementById('getRequestButton').addEventListener('click', () => makeRequest('GET'));
+        document.getElementById('postRequestButton').addEventListener('click', () => makeRequest('POST'));
+        document.getElementById('putRequestButton').addEventListener('click', () => makeRequest('PUT'));
+        document.getElementById('deleteRequestButton').addEventListener('click', () => makeRequest('DELETE'));
+    </script>
+</body>
+</html>
